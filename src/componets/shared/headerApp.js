@@ -26,7 +26,7 @@ const HeaderApp = () => (
         </div>
         <div className="search">
           <form action="" method="get">
-            <input type="text" v-model="search" name="characters" id="" placeholder="Pesquise os personagens"/>
+            <input type="text" name="characters" placeholder="Pesquise os personagens"/>
             <button className="submit"></button>
           </form>
         </div>
