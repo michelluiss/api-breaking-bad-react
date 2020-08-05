@@ -1,29 +1,32 @@
 import React, { Component } from 'react';
+import Filters from '../../componets/characters/Filters'
+import api from '../../services/api'
 import CharacterImage from '../../assets/images/personagens/walter-white-lg.jpg'
 
 export default class Characters extends Component {
+
+  state = {
+    characters: []
+  }
+
+  async componentDidMount() {
+    try {
+      const response = await api.get('characters/?limit=10&offset=10')
+      this.setState({
+        characters: [...this.state.characters, response.data]
+      })
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   render() {
     return(
       <div className="component-characters">
         <div className="container">
           <div className="character">
-            <div className="header-content" v-show="search == ''">
-              <h1>Personagens</h1>
-              <div className="box-filters">
-                <span>Filtrar por:</span>
-                <div className="filters">
-                  <div className="filter alive aliveActive" click="filterCharacter('Alive')">
-                    <span>Vivo</span>
-                  </div>
-                  <div className="filter deceased deceasedActive" click="filterCharacter('Deceased')">
-                    <span>Morto</span>
-                  </div>
-                  <div className="filter all allActive" click="filterCharacter('all')">
-                    <span>Todos</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Filters></Filters>
             <div className="searching" v-show="search != ''"><h3>Você pesquisou por "search"</h3></div>
             <div className="content">
               <div className="box-characters">

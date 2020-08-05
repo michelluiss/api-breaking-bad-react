@@ -1,5 +1,5 @@
 import React from 'react';
-import logoApp from '../../assets/images/breaking-bad-logo.png'
+import logoApp from '../../assets/images/breaking-bad-logo.png';
 
 const HeaderApp = () => (
   <div className="component-header">
@@ -16,7 +16,7 @@ const HeaderApp = () => (
             </li>
             <li className="item-nav">
               Episodios
-              {/* <router-link to="{ name: 'episodes' }">Episodios</router-link> */}
+              {/* <router-link to="{ name: 'suggestions' }">Sugestão</router-link> */}
             </li>
             <li className="item-nav">
               Sugestão
