@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
 import Filters from '../../componets/characters/Filters'
 import api from '../../services/api'
-import CharacterImage from '../../assets/images/personagens/walter-white-lg.jpg'
 
 export default class Characters extends Component {
 
   state = {
-    characters: []
+    characters: [],
+    meta: {}
   }
 
   async componentDidMount() {
     try {
-      const response = await api.get('characters/?limit=10&offset=10')
+      const response = await api.get('characters/')
       this.setState({
-        characters: [...this.state.characters, response.data]
+        characters: response.data.slice(0, 8),
+        meta: {
+          currentPage: 1,
+          nextPage: 2,
+          total: response.data.length,
+          paginationCount: Math.round(response.data.length / 8) + 1
+        }
       })
-      console.log(response)
     } catch (error) {
       console.log(error)
     }
@@ -30,20 +35,23 @@ export default class Characters extends Component {
             <div className="searching" v-show="search != ''"><h3>Você pesquisou por "search"</h3></div>
             <div className="content">
               <div className="box-characters">
-                <div className="card-character" v-for="( character, idx) in filteredList" key="idx">
-                  <img src={CharacterImage} alt="logo"/>
-                  <div className="status alive">Alive</div>
-                  <div className="box-info">
-                    <h2 className="name">character name</h2>
-                    <div className="birthday">character birthday</div>
-                    <p className="occupation">character occupation</p>
+                {this.state.characters.map(character => (
+                  <div className="card-character">
+                    <img src={character.img} alt="logo"/>
+                    <div className={character.status === 'Alive' ? 'status alive' : 'status deceased'}>{character.status}</div>
+                    <div className="box-info">
+                      <h2 className="name">{character.name}</h2>
+                      <div className="birthday">{character.birthday}</div>
+                      <p className="occupation">{character.occupation}</p>
+                    </div>
                   </div>
-                </div>
+                ))
+                }
               </div>
             </div>
             <nav>
               <ul className="pagination" v-show="charactersList.length == 8">
-                <li className="page-item pageActive" v-for="( page, idx ) in paginationCount" key="idx" click="pagination(page)">
+                <li className="page-item pageActive" v-for="( page, idx ) in paginationCount" click="pagination(page)">
                   <span className="page-link">page</span>
                 </li>
               </ul>
