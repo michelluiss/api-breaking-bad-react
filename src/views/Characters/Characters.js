@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Filters from '../../componets/characters/Filters'
 import api from '../../services/api'
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default class Characters extends Component {
 
@@ -11,20 +12,34 @@ export default class Characters extends Component {
 
   async componentDidMount() {
     try {
-      const response = await api.get('characters/')
+      const response = await api.get('characters/?limit=8&offset=0')
       this.setState({
-        characters: response.data.slice(0, 8),
+        characters: response.data,
         meta: {
           currentPage: 1,
-          nextPage: 2,
-          total: response.data.length,
-          paginationCount: Math.round(response.data.length / 8) + 1
+          nextPage: 2
         }
       })
     } catch (error) {
       console.log(error)
     }
   }
+
+  fetchMoreData = async () => {
+    try {
+      const offset = (this.state.meta.currentPage) * 8
+      const response = await api.get(`characters/?limit=8&offset=${offset}`)
+      this.setState({
+        characters: [...this.state.characters, ...response.data],
+        meta: {
+          currentPage: this.state.meta.currentPage + 1,
+          nextPage: this.state.meta.currentPage + 1
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   render() {
     return(
@@ -34,28 +49,26 @@ export default class Characters extends Component {
             <Filters></Filters>
             <div className="searching" v-show="search != ''"><h3>Você pesquisou por "search"</h3></div>
             <div className="content">
-              <div className="box-characters">
-                {this.state.characters.map(character => (
-                  <div className="card-character">
-                    <img src={character.img} alt="logo"/>
-                    <div className={character.status === 'Alive' ? 'status alive' : 'status deceased'}>{character.status}</div>
-                    <div className="box-info">
-                      <h2 className="name">{character.name}</h2>
-                      <div className="birthday">{character.birthday}</div>
-                      <p className="occupation">{character.occupation}</p>
-                    </div>
-                  </div>
-                ))
-                }
+              <div className="box-characters" >
+                <InfiniteScroll
+                  dataLength={this.state.characters.length}
+                  next={this.fetchMoreData}
+                  hasMore={true}
+                >
+                  {this.state.characters.map((character, idx) => (
+                      <div className="card-character" key={idx}>
+                        <img src={character.img} alt="logo"/>
+                        <div className={character.status === 'Alive' ? 'status alive' : 'status deceased'}>{character.status}</div>
+                        <div className="box-info">
+                          <h2 className="name">{character.name}</h2>
+                          <div className="birthday">{character.birthday}</div>
+                          <p className="occupation">{character.occupation}</p>
+                        </div>
+                      </div>
+                  ))}
+                </InfiniteScroll>
               </div>
             </div>
-            <nav>
-              <ul className="pagination" v-show="charactersList.length == 8">
-                <li className="page-item pageActive" v-for="( page, idx ) in paginationCount" click="pagination(page)">
-                  <span className="page-link">page</span>
-                </li>
-              </ul>
-            </nav>
           </div>
         </div>
       </div>

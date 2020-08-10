@@ -118,7 +118,10 @@
       .box-characters {
         display: flex;
         flex-wrap: wrap;
-        // justify-content: space-between;
+        .infinite-scroll-component {
+          display: flex;
+          flex-wrap: wrap;
+        }
         .card-character {
           position: relative;
           flex: 0 24%;
