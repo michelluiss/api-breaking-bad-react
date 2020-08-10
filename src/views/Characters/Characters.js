@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Filters from '../../componets/characters/Filters'
 import api from '../../services/api'
 import InfiniteScroll from 'react-infinite-scroll-component';
+import CharacterCard from '../../componets/characters/CharacterCard'
 
 export default class Characters extends Component {
 
@@ -56,15 +57,7 @@ export default class Characters extends Component {
                   hasMore={true}
                 >
                   {this.state.characters.map((character, idx) => (
-                      <div className="card-character" key={idx}>
-                        <img src={character.img} alt="logo"/>
-                        <div className={character.status === 'Alive' ? 'status alive' : 'status deceased'}>{character.status}</div>
-                        <div className="box-info">
-                          <h2 className="name">{character.name}</h2>
-                          <div className="birthday">{character.birthday}</div>
-                          <p className="occupation">{character.occupation}</p>
-                        </div>
-                      </div>
+                    <CharacterCard character={character} key={idx}></CharacterCard>
                   ))}
                 </InfiniteScroll>
               </div>

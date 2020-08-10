@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Filters = () => (
-    <div className="header-content" v-show="search == ''">
+  <div className="header-content" v-show="search == ''">
     <h1>Personagens</h1>
     <div className="box-filters">
       <span>Filtrar por:</span>
