@@ -1,18 +1,18 @@
 import React from 'react';
 
-const Filters = () => (
+const Filters = ({ aplyFilter }) => (
   <div className="header-content" v-show="search == ''">
     <h1>Personagens</h1>
     <div className="box-filters">
       <span>Filtrar por:</span>
       <div className="filters">
-        <div className="filter alive aliveActive" click="filterCharacter('Alive')">
+        <div className="filter alive aliveActive" onClick={() => aplyFilter('Alive')}>
           <span>Vivo</span>
         </div>
-        <div className="filter deceased deceasedActive" click="filterCharacter('Deceased')">
+        <div className="filter deceased deceasedActive" onClick={() => aplyFilter('Deceased')}>
           <span>Morto</span>
         </div>
-        <div className="filter all allActive" click="filterCharacter('all')">
+        <div className="filter all allActive" onClick={() => aplyFilter('all')}>
           <span>Todos</span>
         </div>
       </div>

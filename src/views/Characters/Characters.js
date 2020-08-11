@@ -8,7 +8,8 @@ export default class Characters extends Component {
 
   state = {
     characters: [],
-    meta: {}
+    meta: {},
+    hasMore: true
   }
 
   async componentDidMount() {
@@ -17,8 +18,7 @@ export default class Characters extends Component {
       this.setState({
         characters: response.data,
         meta: {
-          currentPage: 1,
-          nextPage: 2
+          currentPage: 1
         }
       })
     } catch (error) {
@@ -26,17 +26,36 @@ export default class Characters extends Component {
     }
   }
 
-  fetchMoreData = async () => {
+  fetchCharacters = async (concatState = true) => {
     try {
       const offset = (this.state.meta.currentPage) * 8
       const response = await api.get(`characters/?limit=8&offset=${offset}`)
       this.setState({
-        characters: [...this.state.characters, ...response.data],
+        characters: concatState ? [...this.state.characters, ...response.data] : [...response.data],
         meta: {
-          currentPage: this.state.meta.currentPage + 1,
-          nextPage: this.state.meta.currentPage + 1
+          currentPage: this.state.meta.currentPage + 1
         }
       })
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  aplyFilter = async (filter) => {
+    try {
+      const response = await api.get(`characters/`)
+      if (filter === 'all') {
+        this.setState({ hasMore: true })
+        this.fetchCharacters(false)
+      } else {
+        this.setState({
+          characters: [...response.data.filter(item => { return item.status.toLowerCase() === filter.toLowerCase() })],
+          meta: {
+            currentPage: null
+          },
+          hasMore: false
+        })
+      }
     } catch (error) {
       console.log(error)
     }
@@ -47,14 +66,14 @@ export default class Characters extends Component {
       <div className="component-characters">
         <div className="container">
           <div className="character">
-            <Filters></Filters>
+            <Filters aplyFilter={this.aplyFilter}></Filters>
             <div className="searching" v-show="search != ''"><h3>Você pesquisou por "search"</h3></div>
             <div className="content">
               <div className="box-characters" >
                 <InfiniteScroll
                   dataLength={this.state.characters.length}
-                  next={this.fetchMoreData}
-                  hasMore={true}
+                  next={this.fetchCharacters}
+                  hasMore={this.state.hasMore}
                 >
                   {this.state.characters.map((character, idx) => (
                     <CharacterCard character={character} key={idx}></CharacterCard>
