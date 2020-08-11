@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import api from '../../services/api'
+import api from '../../services/api';
+import EpisodeCard from '../../componets/episodes/EpisodeCard'
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default class Episodes extends Component {
 
@@ -13,17 +15,25 @@ export default class Episodes extends Component {
       const response = await api.get('episodes/')
       this.setState({
         episodes: response.data.slice(0, 8),
+        totalEpisodes: response.data,
         meta: {
-          currentPage: 1,
-          nextPage: 2,
-          total: response.data.length,
-          paginationCount: Math.round(response.data.length / 8) + 1
+          currentPage: 1
         }
       })
     } catch (error) {
       console.log(error)
     }
   }
+
+  loadEpisodes = () => {
+    const offset = (this.state.meta.currentPage) * 8
+    this.setState({
+      episodes: [...this.state.episodes, ...this.state.totalEpisodes.slice(offset, offset + 8)],
+      meta: {
+        currentPage: this.state.meta.currentPage + 1
+      }
+    })
+  };
 
   render() {
     return(
@@ -32,39 +42,20 @@ export default class Episodes extends Component {
           <div className="episodes">
             <div className="content">
               <div className="title">
-                <h1>Episodios</h1>
+                <h1>Episódios</h1>
               </div>
               <div className="box-episodes">
-                {this.state.episodes.map(episode => (
-                  <div className="episode">
-                    <div className="col-name">
-                      <h2 className="name">{episode.title}</h2>
-                      <span>Season: {episode.season} - </span>
-                      <span>Episodio: {episode.episode}</span>
-                    </div>
-                    <div className="col-date">
-                      <p>Data de estreia:</p>
-                      <p>{episode.air_date}</p>
-                    </div>
-                    <div className="col-character">
-                      <div className="name-c">Personagens: </div>
-                      {episode.characters.map(item => (
-                        <div className="name-c">{item}</div>
-                      ))
-                      }
-                    </div>
-                  </div>
-                ))
-                }
+                <InfiniteScroll
+                  dataLength={this.state.episodes.length}
+                  next={this.loadEpisodes}
+                  hasMore={true}
+                >
+                  {this.state.episodes.map((episode, idx) => (
+                    <EpisodeCard episode={episode} key={idx}></EpisodeCard>
+                  ))}
+                </InfiniteScroll>
               </div>
             </div>
-            <nav>
-              <ul className="pagination">
-                <li className="page-item pageActive" v-for="( page, idx ) in paginationCount" key="idx" click="pagination(page)">
-                  <span className="page-link">page</span>
-                </li>
-              </ul>
-            </nav>
           </div>
         </div>
       </div>
