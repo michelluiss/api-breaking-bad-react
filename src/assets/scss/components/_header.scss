@@ -88,6 +88,7 @@
         position: absolute;
         top: gr(10);
         right: gr(10);
+        cursor: pointer;
         @media (max-width: 425px) {
           top: gr(7);
           right: gr(7);

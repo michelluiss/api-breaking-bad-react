@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import logoApp from '../../assets/images/breaking-bad-logo.png';
 
 const HeaderApp = () => (
@@ -11,12 +12,10 @@ const HeaderApp = () => (
         <div className="menu">
           <ul className="nav">
             <li className="item-nav active">
-              Personagens
-              {/* <router-link to="{ name: 'characters' }">Personagens</router-link> */}
+              <Link to="/">Personagens</Link>
             </li>
             <li className="item-nav">
-              Episodios
-              {/* <router-link to="{ name: 'suggestions' }">Sugestão</router-link> */}
+              <Link to="/episodes">Episódios</Link>
             </li>
             <li className="item-nav">
               Sugestão
