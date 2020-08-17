@@ -9,7 +9,8 @@ export default class Characters extends Component {
   state = {
     characters: [],
     meta: {},
-    hasMore: true
+    hasMore: true,
+    activeFilter: 'all'
   }
 
   async componentDidMount() {
@@ -56,6 +57,7 @@ export default class Characters extends Component {
           hasMore: false
         })
       }
+      this.setState({ activeFilter: filter })
     } catch (error) {
       console.log(error)
     }
@@ -66,7 +68,7 @@ export default class Characters extends Component {
       <div className="component-characters">
         <div className="container">
           <div className="character">
-            <Filters aplyFilter={this.aplyFilter}></Filters>
+            <Filters aplyFilter={this.aplyFilter} activeFilter={this.state.activeFilter}></Filters>
             <div className="searching" v-show="search != ''"><h3>Você pesquisou por "search"</h3></div>
             <div className="content">
               <div className="box-characters" >
