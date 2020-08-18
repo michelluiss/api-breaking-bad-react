@@ -118,6 +118,14 @@
       .box-characters {
         display: flex;
         flex-wrap: wrap;
+        .skeleton {
+          width: 100%;
+          span {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+          }
+        }
         .infinite-scroll-component {
           display: flex;
           flex-wrap: wrap;

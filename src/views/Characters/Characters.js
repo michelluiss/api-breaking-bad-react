@@ -3,6 +3,7 @@ import Filters from '../../componets/characters/Filters'
 import api from '../../services/api'
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CharacterCard from '../../componets/characters/CharacterCard'
+import Skeleton from 'react-loading-skeleton';
 
 export default class Characters extends Component {
 
@@ -10,7 +11,8 @@ export default class Characters extends Component {
     characters: [],
     meta: {},
     hasMore: true,
-    activeFilter: 'all'
+    activeFilter: 'all',
+    loading: true
   }
 
   async componentDidMount() {
@@ -20,7 +22,8 @@ export default class Characters extends Component {
         characters: response.data,
         meta: {
           currentPage: 1
-        }
+        },
+        loading: false
       })
     } catch (error) {
       console.log(error)
@@ -71,7 +74,10 @@ export default class Characters extends Component {
             <Filters aplyFilter={this.aplyFilter} activeFilter={this.state.activeFilter}></Filters>
             <div className="searching" v-show="search != ''"><h3>Você pesquisou por "search"</h3></div>
             <div className="content">
-              <div className="box-characters" >
+              <div className="box-characters">
+                <div className="skeleton">
+                  <Loading isLoading={this.state.loading} />,
+                </div>
                 <InfiniteScroll
                   dataLength={this.state.characters.length}
                   next={this.fetchCharacters}
@@ -88,4 +94,10 @@ export default class Characters extends Component {
       </div>
     )
   }
+}
+
+function Loading(props) {
+  if (props.isLoading) {
+    return <Skeleton count={4} width={297} height={400} />;
+  } else return ''
 }
