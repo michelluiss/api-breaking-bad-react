@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { memo } from 'react'
 
-const CharacterCard = ({ character }) => (
-  <div className="card-character">
-    <img src={character.img} alt="logo"/>
-    <div className={character.status === 'Alive' ? 'status alive' : 'status deceased'}>{character.status}</div>
-    <div className="box-info">
-    <h2 className="name">{character.name}</h2>
-    <div className="birthday">{character.birthday}</div>
-    <p className="occupation">{character.occupation}</p>
+function CharacterCard({ character }) {
+  return (
+    <div className="card-character">
+      <img src={character.img} alt="logo"/>
+      <div className={character.status === 'Alive' ? 'status alive' : 'status deceased'}>{character.status}</div>
+      <div className="box-info">
+      <h2 className="name">{character.name}</h2>
+      <div className="birthday">{character.birthday}</div>
+      <p className="occupation">{character.occupation}</p>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
-export default CharacterCard;
+export default memo(CharacterCard);
